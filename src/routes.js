@@ -33,15 +33,12 @@ import Icons from "views/Icons/Icons.js";
 import Server from "views/Server/Server";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
-import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
-import RTLPage from "views/RTLPage/RTLPage.js";
 
 const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Home",
-    rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin"
@@ -49,7 +46,6 @@ const dashboardRoutes = [
   {
     path: "/user",
     name: "API",
-    rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
     component: UserProfile,
     layout: "/admin"
@@ -57,7 +53,6 @@ const dashboardRoutes = [
   {
     path: "/table",
     name: "Server",
-    rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: TableList,
     layout: "/admin"
@@ -65,7 +60,6 @@ const dashboardRoutes = [
   {
     path: "/typography",
     name: "Bandwith",
-    rtlName: "طباعة",
     icon: LibraryBooks,
     component: Typography,
     layout: "/admin"
@@ -73,7 +67,6 @@ const dashboardRoutes = [
   {
     path: "/icons",
     name: "Logs",
-    rtlName: "الرموز",
     icon: BubbleChart,
     component: Icons,
     layout: "/admin"
@@ -81,7 +74,6 @@ const dashboardRoutes = [
   {
     path: "/Server",
     name: "Servers",
-    rtlName: "الرموز",
     icon: BubbleChart,
     component: Server,
     layout: "/admin"
