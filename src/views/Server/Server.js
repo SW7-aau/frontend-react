@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import classNames from "classnames";
 import BootstrapTable from "react-bootstrap-table-next";
 // @material-ui/core components
@@ -23,6 +23,7 @@ import styles from "assets/jss/material-dashboard-react/components/headerLinksSt
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { Sort } from "@material-ui/icons";
 import zIndex from "@material-ui/core/styles/zIndex";
+import axios from "axios";
 
 const useStyles = makeStyles(styles);
 
@@ -39,6 +40,17 @@ export default function Server() {
     const handleCloseNotification = () => {
         setOpenNotification(null);
     };
+
+
+    //  the beginning of fetching data through an API
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            const result = await axios("api link here");
+            setData(result.data);
+        })();
+    }, []);
 
     const columns = [{
         dataField: 'node',
