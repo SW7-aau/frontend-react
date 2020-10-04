@@ -4,7 +4,7 @@ logs
 **/*.backup.*
 **/*.back.*
 
-
+node_nodules
 bower_components
 build
 
