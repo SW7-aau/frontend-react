@@ -15,6 +15,8 @@ var delays2 = 80,
 // // // Daily Sales
 // #############################
 
+
+
 const dailySalesChart = {
   data: {
     labels: ["M", "T", "W", "T", "F", "S", "S"],

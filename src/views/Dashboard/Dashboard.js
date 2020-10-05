@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -39,10 +41,44 @@ import {
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
+
 const useStyles = makeStyles(styles);
 
+
 export default function Dashboard() {
+  const [data, setData] = useState( [] );
   const classes = useStyles();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'http://localhost:5000/server_status',
+      );
+        setData(result.data);
+        console.log(result.data);
+        console.log('hello');
+    };
+    fetchData();
+    }, []);
+
+    console.log(data);
+    console.log(data.map(status => (
+      status.time_stamp
+    )));
+    
+
+    const chartData = {
+        labels: data.map(status => (
+          status.time_stamp
+        )),
+        series: [data.map(status => (
+          status.cpu
+        ))]
+  };
+
+  console.log(chartData);
+  console.log(dailySalesChart.data);
+
   return (
     <div>
 
@@ -52,7 +88,7 @@ export default function Dashboard() {
             <CardHeader color="success">
               <ChartistGraph
                 className="ct-chart"
-                data={dailySalesChart.data}
+                data={chartData}
                 type="Line"
                 options={dailySalesChart.options}
                 listener={dailySalesChart.animation}
@@ -77,7 +113,7 @@ export default function Dashboard() {
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
             <CardHeader color="warning">
-            <ChartistGraph
+              <ChartistGraph
                 className="ct-chart"
                 data={dailySalesChart.data}
                 type="Line"
@@ -88,7 +124,7 @@ export default function Dashboard() {
             <CardBody>
               <h4 className={classes.cardTitle}>RAM</h4>
               <p className={classes.cardCategory}>
-              <span className={classes.successText}>
+                <span className={classes.successText}>
                   39%
                 </span>{" "}
                 Current RAM usage
@@ -114,7 +150,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardBody>
               <h4 className={classes.cardTitle}>Bandwith</h4>
-              <p className={classes.cardCategory}>Current Bandwith 
+              <p className={classes.cardCategory}>Current Bandwith
               <span className={classes.successText}>{" "}
                   39%
                 </span>
@@ -129,26 +165,26 @@ export default function Dashboard() {
         </GridItem>
       </GridContainer>
 
-          <Card>
-            <CardHeader color="warning">
-              <h4 className={classes.cardTitleWhite}>Server Overview</h4>
-              <p className={classes.cardCategoryWhite}>
-                List of Servers
+      <Card>
+        <CardHeader color="warning">
+          <h4 className={classes.cardTitleWhite}>Server Overview</h4>
+          <p className={classes.cardCategoryWhite}>
+            List of Servers
               </p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="warning"
-                tableHead={["Node", "Cluster", "IP"]}
-                tableData={[
-                  ["Node 1", "Cluster 1", "Address 1"],
-                  ["Node 2", "Cluster 2", "Address 2"],
-                  ["Node 3", "Cluster 3", "Address 3"],
-                  ["Node 4", "Cluster 4", "Address 4"]
-                ]}
-              />
-            </CardBody>
-          </Card>
+        </CardHeader>
+        <CardBody>
+          <Table
+            tableHeaderColor="warning"
+            tableHead={["Node", "Cluster", "IP"]}
+            tableData={[
+              ["Node 1", "Cluster 1", "Address 1"],
+              ["Node 2", "Cluster 2", "Address 2"],
+              ["Node 3", "Cluster 3", "Address 3"],
+              ["Node 4", "Cluster 4", "Address 4"]
+            ]}
+          />
+        </CardBody>
+      </Card>
 
     </div>
   );

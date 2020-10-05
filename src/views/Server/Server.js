@@ -42,15 +42,6 @@ export default function Server() {
     };
 
 
-    //  the beginning of fetching data through an API
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        (async () => {
-            const result = await axios("api link here");
-            setData(result.data);
-        })();
-    }, []);
 
     const columns = [{
         dataField: 'node',
