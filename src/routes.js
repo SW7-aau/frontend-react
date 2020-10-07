@@ -38,17 +38,17 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/User",
-    name: "API",
-    icon: Person,
-    component: UserProfile,
-    layout: "/admin"
-  },
-  {
     path: "/Table",
     name: "Server",
     icon: "content_paste",
     component: TableList,
+    layout: "/admin"
+  },
+  {
+    path: "/User",
+    name: "API",
+    icon: Person,
+    component: UserProfile,
     layout: "/admin"
   },
   {
@@ -67,7 +67,7 @@ const dashboardRoutes = [
   },
   {
     path: "/Server",
-    name: "Servers",
+    name: "Server Details",
     icon: BubbleChart,
     component: Server,
     layout: "/admin"

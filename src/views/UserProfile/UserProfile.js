@@ -1,178 +1,190 @@
-import React from "react";
-// @material-ui/core components
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import BootstrapTable from "react-bootstrap-table-next";
+import { Multiselect } from "multiselect-react-dropdown";
+// react plugin for creating charts
+import ChartistGraph from "react-chartist";
+// @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
+import Icon from "@material-ui/core/Icon";
+import Hidden from "@material-ui/core/Hidden";
+// @material-ui/icons
+import Store from "@material-ui/icons/Store";
+import Warning from "@material-ui/icons/Warning";
+import DateRange from "@material-ui/icons/DateRange";
+import LocalOffer from "@material-ui/icons/LocalOffer";
+import Update from "@material-ui/icons/Update";
+import ArrowUpward from "@material-ui/icons/ArrowUpward";
+import AccessTime from "@material-ui/icons/AccessTime";
+import Accessibility from "@material-ui/icons/Accessibility";
+import BugReport from "@material-ui/icons/BugReport";
+import Code from "@material-ui/icons/Code";
+import Cloud from "@material-ui/icons/Cloud";
+import Notifications from "@material-ui/icons/Notifications";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
+import Table from "components/Table/Table.js";
+import Tasks from "components/Tasks/Tasks.js";
+import CustomTabs from "components/CustomTabs/CustomTabs.js";
+import Danger from "components/Typography/Danger.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardAvatar from "components/Card/CardAvatar.js";
+import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import avatar from "assets/img/faces/marc.jpg";
+import { bugs, website, server } from "variables/general.js";
 
-const styles = {
-  cardCategoryWhite: {
-    color: "rgba(255,255,255,.62)",
-    margin: "0",
-    fontSize: "14px",
-    marginTop: "0",
-    marginBottom: "0"
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none"
-  }
-};
+import {
+  dailySalesChart,
+  emailsSubscriptionChart,
+  completedTasksChart,
+} from "variables/charts.js";
+
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 const useStyles = makeStyles(styles);
 
-export default function UserProfile() {
+const columns = [
+  {
+    dataField: "APIName",
+    text: "API Name",
+    sort: true,
+  },
+  {
+    dataField: "ResponseTime",
+    text: "Response Time",
+    sort: true,
+  },
+  {
+    dataField: "Status",
+    text: "Status",
+    sort: true,
+  },
+];
+
+const products = [
+  {
+    APIName: "API 1",
+    ResponseTime: "Response Time 1",
+    Status: "active",
+  },
+  {
+    APIName: "API 2",
+    ResponseTime: "Response Time 2",
+    Status: "inactive",
+  },
+  {
+    APIName: "API 3",
+    ResponseTime: "Response Time 3",
+    Status: "Active",
+  },
+];
+
+export default function TableList() {
   const classes = useStyles();
+  const options = [{ name: "api 1" }, { name: "api 2" }, { name: "api 3" }];
+
+  const [openNotification, setOpenNotification] = React.useState(null);
+  const handleClickNotification = (event) => {
+    if (openNotification && openNotification.contains(event.target)) {
+      setOpenNotification(null);
+    } else {
+      setOpenNotification(event.currentTarget);
+    }
+  };
+  const handleCloseNotification = () => {
+    setOpenNotification(null);
+  };
+
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card chart>
+            <CardHeader color="success">
+              <ChartistGraph
+                className="ct-chart"
+                data={dailySalesChart.data}
+                type="Line"
+                options={dailySalesChart.options}
+                listener={dailySalesChart.animation}
+              />
             </CardHeader>
             <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      disabled: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
-                  <CustomInput
-                    labelText="Username"
-                    id="username"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Email address"
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
-                  <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
+              <h4 className={classes.cardTitle}>Uptime%</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>39%</span> Current uptime %
+              </p>
             </CardBody>
-            <CardFooter>
-              <Button color="primary">Update Profile</Button>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> updated 4 minute(s) ago
+              </div>
             </CardFooter>
           </Card>
         </GridItem>
+        <GridItem xs={12} sm={12} md={4}></GridItem>
         <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={e => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don{"'"}t be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
+          <Card chart>
+            <CardHeader color="danger">
+              <ChartistGraph
+                className="ct-chart"
+                data={completedTasksChart.data}
+                type="Line"
+                options={completedTasksChart.options}
+                listener={completedTasksChart.animation}
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Average response time</h4>
+              <p className={classes.cardCategory}>
+                Current response time
+                <span className={classes.successText}> 39ms</span>
               </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
             </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> Updated 1 minute(s)
+              </div>
+            </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>
+
+      <Card>
+        <CardHeader color="warning">
+          <h4 className={classes.cardTitleWhite}>Server Overview</h4>
+          <p className={classes.cardCategoryWhite}>List of Servers</p>
+        </CardHeader>
+        <CardBody>
+          <Button
+            marginLeft="auto"
+            color={window.innerWidth > 959}
+            //justIcon={window.innerWidth > 959}
+            simple={!(window.innerWidth > 959)}
+            aria-owns={openNotification ? "notification-menu-list-grow" : null}
+            aria-haspopup="true"
+            onClick={handleClickNotification}
+            className={classes.buttonLink}
+          >
+            <span className={classes.notifications}>Add Server</span>
+          </Button>
+          <Multiselect
+            options={options}
+            displayValue="name"
+            showCheckbox={true}
+          />
+          <BootstrapTable
+            keyField="node"
+            data={products}
+            columns={columns}
+            striped
+          />
+        </CardBody>
+      </Card>
     </div>
   );
 }
