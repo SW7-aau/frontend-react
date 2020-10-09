@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -82,7 +83,7 @@ const products = [
 export default function Dashboard() {
   const [data, setData] = useState([]);
   const classes = useStyles();
-
+const { SearchBar } = Search; 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios("http://localhost:5000/server_status");
@@ -190,12 +191,27 @@ export default function Dashboard() {
           <p className={classes.cardCategoryWhite}>List of Servers</p>
         </CardHeader>
         <CardBody>
-        <BootstrapTable
+        <ToolkitProvider
+          keyField="node"
+          data={products}
+          columns={columns}
+          search
+          >
+            {
+              props => (
+                <div>
+                  <SearchBar { ...props.searchProps } />
+                  <BootstrapTable { ...props.baseProps}
             keyField="node"
             data={products}
             columns={columns}
             striped
           />
+
+                </div>
+              )
+            }
+          </ToolkitProvider>
         </CardBody>
       </Card>
     </div>

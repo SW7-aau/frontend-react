@@ -24,6 +24,7 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 import Admin from "layouts/Admin.js";
 import "assets/css/material-dashboard-react.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
 
 const hist = createBrowserHistory();
 

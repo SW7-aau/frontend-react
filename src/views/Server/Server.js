@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import { Multiselect } from "multiselect-react-dropdown";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -125,7 +127,7 @@ const products = [
 
 export default function TableList() {
   const classes = useStyles();
-
+  const { SearchBar } = Search; 
   const [openNotification, setOpenNotification] = React.useState(null);
   const handleClickNotification = (event) => {
     if (openNotification && openNotification.contains(event.target)) {
@@ -240,12 +242,27 @@ export default function TableList() {
           <h4 className={classes.cardTitleWhite}> Network Packages </h4>{" "}
         </CardHeader>{" "}
         <CardBody>
-          <BootstrapTable
-            keyField="node"
+        <ToolkitProvider
+          keyField="Protocol"
+          data={products}
+          columns={columns}
+          search
+          >
+            {
+              props => (
+                <div>
+                  <SearchBar { ...props.searchProps } />
+                  <BootstrapTable { ...props.baseProps}
+            keyField="Protocol"
             data={products}
             columns={columns}
             striped
           />
+
+                </div>
+              )
+            }
+          </ToolkitProvider>
         </CardBody>{" "}
       </Card>
     </div>

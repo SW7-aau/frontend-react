@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
-import { Multiselect } from "multiselect-react-dropdown";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -85,7 +85,8 @@ const products = [
 
 export default function TableList() {
   const classes = useStyles();
-  const options = [{ name: "api 1" }, { name: "api 2" }, { name: "api 3" }];
+  const { SearchBar } = Search; 
+
 
   const [openNotification, setOpenNotification] = React.useState(null);
   const handleClickNotification = (event) => {
@@ -172,17 +173,28 @@ export default function TableList() {
           >
             <span className={classes.notifications}>Add Server</span>
           </Button>
-          <Multiselect
-            options={options}
-            displayValue="name"
-            showCheckbox={true}
-          />
-          <BootstrapTable
-            keyField="node"
+
+          <ToolkitProvider
+            keyField="APIName"
             data={products}
             columns={columns}
-            striped
-          />
+            search
+          >
+            {
+              props => (
+                <div>
+                  <SearchBar {...props.searchProps} />
+                  <BootstrapTable {...props.baseProps}
+                    keyField="APIName"
+                    data={products}
+                    columns={columns}
+                    striped
+                  />
+                </div>
+              )
+            }
+          </ToolkitProvider>
+
         </CardBody>
       </Card>
     </div>
