@@ -6,40 +6,20 @@ import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
-import Hidden from "@material-ui/core/Hidden";
 // @material-ui/icons
-import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
-import Notifications from "@material-ui/icons/Notifications";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import { bugs, website, server } from "variables/general.js";
 
 import {
   dailySalesChart,
-  emailsSubscriptionChart,
   completedTasksChart,
 } from "variables/charts.js";
 
@@ -83,11 +63,48 @@ const products = [
   },
 ];
 
-export default function TableList() {
+export default function ServerOverview() {
+  const [data, setData] = useState([]);
+  const [ServerOverview, setServer] = useState([]);
   const classes = useStyles();
 
   const { SearchBar } = Search; 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("http://localhost:5000/server_status");
+      setData(result.data);
+    };
+    fetchData();
+  }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("http://localhost:5000/servers");
+      setServer(result.data);
+    };
+    fetchData();
+  }, []);
+
+  const serversTable = {
+    node: data.map((status) => status.Node),
+    cluster: [data.map((status) => status.Cluster)],
+    ip: [data.map((status) => status.ip)]
+  };
+
+  const chartCPU = {
+    labels: data.map((status) => status.time_stamp),
+    series: [data.map((status) => status.cpu)],
+  };
+
+  const chartRAM = {
+    labels: data.map((status) => status.time_stamp),
+    series: [data.map((status) => status.ram)],
+  };
+
+  const chartBandwidth = {
+    labels: data.map((status) => status.time_stamp),
+    series: [data.map((status) => status.bandwidth)],
+  };
 
   const [openNotification, setOpenNotification] = React.useState(null);
   const handleClickNotification = (event) => {

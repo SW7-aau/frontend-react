@@ -6,42 +6,18 @@ import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
-import Hidden from "@material-ui/core/Hidden";
 // @material-ui/icons
-import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
-import Notifications from "@material-ui/icons/Notifications";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import { bugs, website, server } from "variables/general.js";
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart,
-} from "variables/charts.js";
+import { dailySalesChart, completedTasksChart } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -83,10 +59,27 @@ const products = [
   },
 ];
 
-export default function TableList() {
+export default function API() {
   const classes = useStyles();
-  const { SearchBar } = Search; 
+  const [data, setData] = useState([]);
+  const { SearchBar } = Search;
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("http://localhost:5000/API");
+      setData(result.data);
+    };
+    fetchData();
+  }, []);
 
+  const chartUptime = {
+    labels: data.map((status) => status.time_stamp),
+    series: [data.map((status) => status.Uptime)],
+  };
+
+  const chartResponse = {
+    labels: data.map((status) => status.time_stamp),
+    series: [data.map((status) => status.response_time)],
+  };
 
   const [openNotification, setOpenNotification] = React.useState(null);
   const handleClickNotification = (event) => {
@@ -103,7 +96,7 @@ export default function TableList() {
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem xs={12} sm={12} md={6}>
           <Card chart>
             <CardHeader color="success">
               <ChartistGraph
@@ -117,7 +110,8 @@ export default function TableList() {
             <CardBody>
               <h4 className={classes.cardTitle}>Uptime%</h4>
               <p className={classes.cardCategory}>
-                <span className={classes.successText}>39%</span> Current uptime %
+                <span className={classes.successText}>39%</span> Current uptime
+                %
               </p>
             </CardBody>
             <CardFooter chart>
@@ -127,8 +121,7 @@ export default function TableList() {
             </CardFooter>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={12} md={4}></GridItem>
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem xs={12} sm={12} md={6}>
           <Card chart>
             <CardHeader color="danger">
               <ChartistGraph
@@ -157,8 +150,8 @@ export default function TableList() {
 
       <Card>
         <CardHeader color="warning">
-          <h4 className={classes.cardTitleWhite}>Server Overview</h4>
-          <p className={classes.cardCategoryWhite}>List of Servers</p>
+          <h4 className={classes.cardTitleWhite}>API Overview</h4>
+          <p className={classes.cardCategoryWhite}>List APIs</p>
         </CardHeader>
         <CardBody>
           <Button
@@ -171,7 +164,7 @@ export default function TableList() {
             onClick={handleClickNotification}
             className={classes.buttonLink}
           >
-            <span className={classes.notifications}>Add Server</span>
+            <span className={classes.notifications}>Add API</span>
           </Button>
 
           <ToolkitProvider
@@ -180,21 +173,19 @@ export default function TableList() {
             columns={columns}
             search
           >
-            {
-              props => (
-                <div>
-                  <SearchBar {...props.searchProps} />
-                  <BootstrapTable {...props.baseProps}
-                    keyField="APIName"
-                    data={products}
-                    columns={columns}
-                    striped
-                  />
-                </div>
-              )
-            }
+            {(props) => (
+              <div>
+                <SearchBar {...props.searchProps} />
+                <BootstrapTable
+                  {...props.baseProps}
+                  keyField="APIName"
+                  data={products}
+                  columns={columns}
+                  striped
+                />
+              </div>
+            )}
           </ToolkitProvider>
-
         </CardBody>
       </Card>
     </div>

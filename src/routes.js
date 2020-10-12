@@ -18,15 +18,12 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
-import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
-import UserProfile from "views/UserProfile/UserProfile.js";
-import TableList from "views/TableList/TableList.js";
-import Typography from "views/Typography/Typography.js";
-import Icons from "views/Icons/Icons.js";
-import Server from "views/Server/Server";
+import ServerOverview from "views/ServerOverview/ServerOverview.js"
+import ServerDetails from "views/Server/Server.js";
+import API from "views/API/API";
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -38,38 +35,24 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/Table",
-    name: "Server",
+    path: "/ServerOverview",
+    name: "Server Overview",
     icon: "content_paste",
-    component: TableList,
+    component: ServerOverview,
     layout: "/admin"
   },
   {
-    path: "/User",
+    path: "/API",
     name: "API",
     icon: Person,
-    component: UserProfile,
+    component: API,
     layout: "/admin"
   },
   {
-    path: "/Typography",
-    name: "Bandwith",
-    icon: LibraryBooks,
-    component: Typography,
-    layout: "/admin"
-  },
-  {
-    path: "/Icons",
-    name: "Logs",
-    icon: BubbleChart,
-    component: Icons,
-    layout: "/admin"
-  },
-  {
-    path: "/Server",
+    path: "/ServerDetails",
     name: "Server Details",
     icon: BubbleChart,
-    component: Server,
+    component: ServerDetails,
     layout: "/admin"
   }
 ];
