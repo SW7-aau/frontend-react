@@ -5,6 +5,9 @@ import { Multiselect } from "multiselect-react-dropdown";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 
 // react plugin for creating charts
+import CanvasJSReact from 'assets/canvasjs.react';
+
+
 import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,6 +28,9 @@ import {
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+
+var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const useStyles = makeStyles(styles);
 const id = 0;
@@ -71,49 +77,30 @@ const columns = [
   }
 ];
 
-const products = [
-  {
-    Timestamp: "Timestamp 1",
-    Protocol: "Protocol 1",
-    Size: "Size 1",
-    DestinationIP: "Destination IP 1",
-    DestinationPort: "Destination Port 1",
-    SourceIP: "Source IP 1",
-    SourceName: "Source Name 1",
-    SourcePort: "Source Port 1",
-  },
-  {
-    Timestamp: "Timestamp 2",
-    Protocol: "Protocol 2",
-    Size: "Size 2",
-    DestinationIP: "Destination IP 2",
-    DestinationPort: "Destination Port 2",
-    SourceIP: "Source IP 2",
-    SourceName: "Source Name 2",
-    SourcePort: "Source Port 2",
-  },
-  {
-    Timestamp: "Timestamp 3",
-    Protocol: "Protocol 3",
-    Size: "Size 3",
-    DestinationIP: "Destination IP 3",
-    DestinationPort: "Destination Port 3",
-    SourceIP: "Source IP 3",
-    SourceName: "Source Name 3",
-    SourcePort: "Source Port 3",
-  },
-];
+function changeAxisMinimum(chart) {	 
+	var minY = Infinity;
+	var minimum = chart.axisX[0].get("minimum");
+	var maximum = chart.axisX[0].get("maximum");
+	for(var i = 0; i < chart.data[0].dataPoints.length; i++){
+		if(chart.data[0].dataPoints[i].x >= minimum && chart.data[0].dataPoints[i].x <= maximum && chart.data[0].dataPoints[i].y < minY){
+			minY = chart.data[0].dataPoints[i].y;
+		}
+	}
+	chart.axisY[0].set("minimum", minY)
+}
+
 
 export default function ServerDetails() {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [serverStats, setServerStats] = useState([]);
   const { SearchBar } = Search;
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios("http://217.69.10.141:5000/get-resources", {
         params: {
-          node_id: "testidqwe",
+          node_id: "testid",
           from: "2020-09-04 11:50:23",
           to: "2020-12-04 11:50:23"
         }
@@ -123,20 +110,32 @@ export default function ServerDetails() {
     fetchData();
   }, []);
 
-  const chartCPU = {
-    labels: serverStats.map((status) => status.time_stamp),
-    series: [serverStats.map((status) => status.cpu)],
-  };
+  const chartCPU = [];
+// new Date(serverStats[i].time_stamp) Can't get it to work
+  for (var i = 0; i < serverStats.length; i++) {
+    chartCPU.push({
+      x: i,
+      y: serverStats[i].cpu
+    });
+  }
 
-  const chartRAM = {
-    labels: serverStats.map((status) => status.time_stamp),
-    series: [serverStats.map((status) => status.ram)],
-  };
+  const chartRAM = [];
+// new Date(serverStats[i].time_stamp) Can't get it to work
+  for (var i = 0; i < serverStats.length; i++) {
+    chartRAM.push({
+      x: i,
+      y: parseFloat(serverStats[i].ram)
+    });
+  }
 
-  const chartBandwidth = {
-    labels: serverStats.map((status) => status.time_stamp),
-    series: [serverStats.map((status) => status.bandwidth)],
-  };
+  const chartBandwidth = [];
+  for (var i = 0; i < serverStats.length; i++) {
+    chartBandwidth.push({
+      x: i,
+      y: parseFloat(serverStats[i].bandwidth)
+    });
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,6 +176,51 @@ export default function ServerDetails() {
     setOpenNotification(null);
   };
 
+  const CPUoptions = {
+    theme: "light2", // "light1", "dark1", "dark2"
+    animationEnabled: true,
+    zoomEnabled: true,
+    title: {
+      text: "CPU"
+    },
+    axisY: {
+      maximum: 100,
+    },
+    data: [{
+      type: "line",
+      yValueFormatString:"## '%'",
+      dataPoints: chartCPU
+    }]
+  }
+
+  const RAMoptions = {
+    theme: "light2", // "light1", "dark1", "dark2"
+    animationEnabled: true,
+    zoomEnabled: true,
+    title: {
+      text: "RAM"
+    },
+    data: [{
+      type: "line",
+      yValueFormatString:"##.# '%'",
+      dataPoints: chartRAM
+    }]
+  }
+
+  const Bandwidthoptions = {
+    theme: "light2", // "light1", "dark1", "dark2"
+    animationEnabled: true,
+    zoomEnabled: true,
+    title: {
+      text: "Bandwidth"
+    },
+    data: [{
+      type: "line",
+      yValueFormatString:"##.# '%'",
+      dataPoints: chartBandwidth
+    }]
+  }
+  
   const options = [
     { name: "last 7 days" },
     { name: "last month" },
@@ -186,6 +230,10 @@ export default function ServerDetails() {
 
   return (
     <div>
+      
+      <CanvasJSChart options = {CPUoptions}  />
+      <CanvasJSChart options = {RAMoptions} />
+      <CanvasJSChart options = {Bandwidthoptions} />
       <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>

@@ -10,6 +10,7 @@
     "@material-ui/icons": "4.9.1",
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
+    "canvasjs": "^1.8.3",
     "chartist": "0.10.1",
     "classnames": "2.2.6",
     "cors": "^2.8.5",
@@ -27,7 +28,8 @@
     "react-google-maps": "9.4.5",
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
-    "react-swipeable-views": "0.13.9"
+    "react-swipeable-views": "0.13.9",
+    "reactjs-popup": "^2.0.4"
   },
   "scripts": {
     "proxy": "http://217.69.10.141:5000",
