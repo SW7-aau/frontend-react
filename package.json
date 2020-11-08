@@ -30,7 +30,7 @@
     "react-swipeable-views": "0.13.9"
   },
   "scripts": {
-    "proxy": "http://localhost:9000",
+    "proxy": "http://217.69.10.141:5000",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
