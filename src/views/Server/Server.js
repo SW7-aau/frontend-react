@@ -100,7 +100,7 @@ export default function ServerDetails() {
     const fetchData = async () => {
       const result = await axios("http://217.69.10.141:5000/get-resources", {
         params: {
-          node_id: "testid",
+          node_id: "172.17.0.6",
           from: "2020-09-04 11:50:23",
           to: "2020-12-04 11:50:23"
         }
@@ -114,16 +114,17 @@ export default function ServerDetails() {
 // new Date(serverStats[i].time_stamp) Can't get it to work
   for (var i = 0; i < serverStats.length; i++) {
     chartCPU.push({
-      x: i,
+      x: new Date(serverStats[i].time_stamp),
       y: serverStats[i].cpu
     });
   }
+  console.log(chartCPU)
 
   const chartRAM = [];
 // new Date(serverStats[i].time_stamp) Can't get it to work
   for (var i = 0; i < serverStats.length; i++) {
     chartRAM.push({
-      x: i,
+      x: new Date(serverStats[i].time_stamp),
       y: parseFloat(serverStats[i].ram)
     });
   }
@@ -131,7 +132,7 @@ export default function ServerDetails() {
   const chartBandwidth = [];
   for (var i = 0; i < serverStats.length; i++) {
     chartBandwidth.push({
-      x: i,
+      x: new Date(serverStats[i].time_stamp),
       y: parseFloat(serverStats[i].bandwidth)
     });
   }
@@ -189,6 +190,7 @@ export default function ServerDetails() {
     data: [{
       type: "line",
       yValueFormatString:"## '%'",
+      xValueFormatString:"YYYY-MM-DD hh:mm:ss",
       dataPoints: chartCPU
     }]
   }
@@ -234,94 +236,7 @@ export default function ServerDetails() {
       <CanvasJSChart options = {CPUoptions}  />
       <CanvasJSChart options = {RAMoptions} />
       <CanvasJSChart options = {Bandwidthoptions} />
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={chartCPU}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />{" "}
-            </CardHeader>{" "}
-            <CardBody>
-              <h4 className={classes.cardTitle}> CPU </h4>{" "}
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>  </span> Current CPU
-                load{" "}
-              </p>{" "}
-              <p>
-                <Multiselect
-                  style={{ zIndex: 2 }}
-                  options={options}
-                  displayValue="name"
-                  singleSelect
-                />
-              </p>{" "}
-            </CardBody>
-          </Card>{" "}
-        </GridItem>{" "}
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={chartRAM}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />{" "}
-            </CardHeader>{" "}
-            <CardBody>
-              <h4 className={classes.cardTitle}> RAM </h4>{" "}
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>  </span> Current RAM
-                usage{" "}
-              </p>{" "}
-              <p>
-                <Multiselect
-                  style={{ zIndex: 2 }}
-                  options={options}
-                  displayValue="name"
-                  singleSelect
-                />
-              </p>{" "}
-            </CardBody>
-          </Card>{" "}
-        </GridItem>{" "}
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={chartBandwidth}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />{" "}
-            </CardHeader>{" "}
-            <CardBody>
-              <h4 className={classes.cardTitle}> Bandwith </h4>{" "}
-              <p className={classes.cardCategory}>
-                {" "}
-                Current Bandwith{" "}
-                <span className={classes.successText}>  </span>{" "}
-              </p>{" "}
-              <p>
-                <Multiselect
-                  style={{ zIndex: 2 }}
-                  options={options}
-                  displayValue="name"
-                  singleSelect
-                />
-              </p>{" "}
-            </CardBody>
-          </Card>{" "}
-        </GridItem>{" "}
-      </GridContainer>
-
+      
       <Card style={{ zIndex: 1 }}>
         <CardHeader color="warning">
           <h4 className={classes.cardTitleWhite}> Network Packages </h4>{" "}
