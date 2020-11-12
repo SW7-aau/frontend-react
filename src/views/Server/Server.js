@@ -3,7 +3,7 @@ import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import { Multiselect } from "multiselect-react-dropdown";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
-
+import { useLocation } from "react-router-dom";
 // react plugin for creating charts
 import CanvasJSReact from 'assets/canvasjs.react';
 
@@ -34,6 +34,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const useStyles = makeStyles(styles);
 const id = 0;
+
 const columns = [
   {
     dataField: "Timestamp",
@@ -91,16 +92,18 @@ function changeAxisMinimum(chart) {
 
 
 export default function ServerDetails() {
+  let location = useLocation();
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [serverStats, setServerStats] = useState([]);
   const { SearchBar } = Search;
+  const node_id = location.state.node_id;
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios("http://217.69.10.141:5000/get-resources", {
+      const result = await axios("http://95.179.226.113:5000/get-resources", {
         params: {
-          node_id: "172.17.0.6",
+          node_id: node_id,
           from: "2020-09-04 11:50:23",
           to: "2020-12-04 11:50:23"
         }
@@ -111,7 +114,6 @@ export default function ServerDetails() {
   }, []);
 
   const chartCPU = [];
-// new Date(serverStats[i].time_stamp) Can't get it to work
   for (var i = 0; i < serverStats.length; i++) {
     chartCPU.push({
       x: new Date(serverStats[i].time_stamp),
@@ -121,7 +123,6 @@ export default function ServerDetails() {
   console.log(chartCPU)
 
   const chartRAM = [];
-// new Date(serverStats[i].time_stamp) Can't get it to work
   for (var i = 0; i < serverStats.length; i++) {
     chartRAM.push({
       x: new Date(serverStats[i].time_stamp),
@@ -140,9 +141,9 @@ export default function ServerDetails() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios("http://217.69.10.141:5000/network-package", {
+      const result = await axios("http://95.179.226.113:5000/network-package", {
         params: {
-          node_id: "172.17.0.7",
+          node_id: node_id,
           from: "2020-10-04 11:50:23",
           to: "2020-12-04 11:50:23"
         }
@@ -152,17 +153,19 @@ export default function ServerDetails() {
     fetchData();
   }, []);
 
-  const serverTable = [{
-    
-    Timestamp: data.map((status) => status.timestamp),
-    Protocol: data.map((status) => status.protocol),
-    Size: data.map((status) => status.size),
-    Destination: data.map((status) => status.dst),
-    DestinationPort: data.map((status) => status.dst_port),
-    Source: data.map((status) => status.src),
-    SourcePort: data.map((status) => status.src_port),
-    Layer: data.map((status) => status.layer)
-  }];
+  const serverTable = [];
+    for (var i = 0; i < data.length; i++) {
+      serverTable.push({
+        Timestamp: new Date(data[i].time_stamp),
+        Protocol: data[i].cpu,
+        Size: data[i].cpu,
+        Destination: data[i].cpu,
+        DestinationPort: data[i].cpu,
+        Source: data[i].cpu,
+        SourcePort: data[i].cpu,
+        Layer: data[i].cpu,
+      });
+    }
 
 
   const [openNotification, setOpenNotification] = React.useState(null);

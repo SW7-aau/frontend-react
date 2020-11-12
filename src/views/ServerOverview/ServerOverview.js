@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import { Link, useLocation } from "react-router-dom";
 import Popup from "reactjs-popup";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
@@ -25,7 +26,25 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 
 const useStyles = makeStyles(styles);
 
+const linkFormatter = (cell, row, rowIndex) => {
+  return (
+    <Link to={
+      {
+        pathname: "ServerDetails",
+        state: {
+          node_id: cell
+        }
+      }
+    }> {cell} </Link>
+  )
+}
+
 const columns = [
+  {
+    dataField: "node_id",
+    text: "Node ID",
+    sort: true,
+  },
   {
     dataField: "cluster",
     text: "Cluster",
@@ -35,6 +54,7 @@ const columns = [
     dataField: "ip",
     text: "IP",
     sort: true,
+    formatter: linkFormatter
   },
   {
     dataField: "active",
@@ -44,16 +64,18 @@ const columns = [
 ];
 
 export default function ServerOverview() {
+  let location = useLocation();
   const [data, setData] = useState([]);
   const [ServerOverview, setServer] = useState([]);
   const classes = useStyles();
 
   const [node_id, setNode_id] = useState("");
-  const [cluster_id, setCluster_id] = useState("");
   const [ip_address, setIp_Address] = useState("");
   const [active, setActive] = useState("");
-
   const { SearchBar } = Search;
+
+  const c_id = location.state.cluster_id;
+
   /*
   useEffect(() => {
     const fetchData = async () => {
@@ -67,11 +89,13 @@ export default function ServerOverview() {
     fetchData();
   }, []);
 */
+
+
   useEffect(() => {
     const fetchData = async () => {
-      const result = await axios("http://217.69.10.141:5000/get-nodes", {
+      const result = await axios("http://95.179.226.113:5000/get-nodes", {
         params: {
-          cluster_id: "3000",
+          cluster_id: c_id,
         },
       });
       setServer(result.data);
@@ -82,6 +106,7 @@ export default function ServerOverview() {
   const serversTable = [];
   for (var i = 0; i < ServerOverview.length; i++) {
     serversTable.push({
+      node_id: ServerOverview[i].id,
       cluster: ServerOverview[i].c_id,
       ip: ServerOverview[i].ip_address,
       active: ServerOverview[i].active,
@@ -100,6 +125,10 @@ export default function ServerOverview() {
   const handleCloseNotification = () => {
     setOpenNotification(null);
   };
+
+  function refreshPage() {
+    window.location.reload(false);
+  }
 
   return (
     <div>
@@ -122,13 +151,6 @@ export default function ServerOverview() {
                   />{" "}
                   <TextField
                     required
-                    id="cluster_id"
-                    value={cluster_id}
-                    label="cluster_id "
-                    onChange={(e) => setCluster_id(e.target.value)}
-                  />{" "}
-                  <TextField
-                    required
                     id="ip_address"
                     value={ip_address}
                     label="ip_address "
@@ -145,27 +167,24 @@ export default function ServerOverview() {
                 <button
                   className="button"
                   onClick={() => {
-                    if ((node_id, cluster_id, ip_address, active != "")) {
-                      axios
-                        .post("http://217.69.10.141:5000/add-node", {
-                          params: {
-                            node_id: node_id,
-                            cluster_id: cluster_id,
-                            ip_address: ip_address,
-                            active: active,
-                          },
-                        })
+                    if ((node_id, ip_address, active != "")) {
+                      axios.post("http://95.179.226.113:5000/add-node", {}, {
+                        params:
+                        {
+                          node_id: node_id,
+                          cluster_id: c_id,
+                          ip_address: ip_address,
+                          active: active,
+                        },
+                      })
                         .then(function (response) {
                           console.log(response);
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
-                      setNode_id("");
-                      setCluster_id("");
-                      setIp_Address("");
-                      setActive("");
                       close();
+                      refreshPage();
                     }
                   }}
                 >

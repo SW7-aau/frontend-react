@@ -42,13 +42,6 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/API",
-    name: "API",
-    icon: Person,
-    component: API,
-    layout: "/admin"
-  },
-  {
     path: "/ServerDetails",
     name: "Server Details",
     icon: BubbleChart,
