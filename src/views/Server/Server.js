@@ -208,6 +208,7 @@ export default function ServerDetails() {
     data: [{
       type: "line",
       yValueFormatString:"##.# '%'",
+      xValueFormatString:"YYYY-MM-DD hh:mm:ss",
       dataPoints: chartRAM
     }]
   }
@@ -222,16 +223,11 @@ export default function ServerDetails() {
     data: [{
       type: "line",
       yValueFormatString:"##.# '%'",
+      xValueFormatString:"YYYY-MM-DD hh:mm:ss",
       dataPoints: chartBandwidth
     }]
   }
-  
-  const options = [
-    { name: "last 7 days" },
-    { name: "last month" },
-    { name: "last 6 months" },
-    { name: "last year" },
-  ];
+
 
   return (
     <div>

@@ -28,16 +28,19 @@ const useStyles = makeStyles(styles);
 
 const linkFormatter = (cell, row, rowIndex) => {
   return (
-    <Link to={
-      {
+    <Link
+      to={{
         pathname: "ServerDetails",
         state: {
-          node_id: cell
-        }
-      }
-    }> {cell} </Link>
-  )
-}
+          node_id: cell,
+        },
+      }}
+    >
+      {" "}
+      {cell}{" "}
+    </Link>
+  );
+};
 
 const columns = [
   {
@@ -54,7 +57,7 @@ const columns = [
     dataField: "ip",
     text: "IP",
     sort: true,
-    formatter: linkFormatter
+    formatter: linkFormatter,
   },
   {
     dataField: "active",
@@ -69,27 +72,13 @@ export default function ServerOverview() {
   const [ServerOverview, setServer] = useState([]);
   const classes = useStyles();
 
+  const [old_node_id, setOldNode_id] = useState("");
   const [node_id, setNode_id] = useState("");
+  const [new_cluster_id, setClusterId] = useState("");
   const [ip_address, setIp_Address] = useState("");
   const [active, setActive] = useState("");
   const { SearchBar } = Search;
-
   const c_id = location.state.cluster_id;
-
-  /*
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios("http://217.69.10.141:5000/get-avg-ram", {
-        params: {
-          cluster_id: "3000"
-        }
-      });
-      setData(result.data);
-    };
-    fetchData();
-  }, []);
-*/
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -168,15 +157,153 @@ export default function ServerOverview() {
                   className="button"
                   onClick={() => {
                     if ((node_id, ip_address, active != "")) {
-                      axios.post("http://95.179.226.113:5000/add-node", {}, {
-                        params:
-                        {
-                          node_id: node_id,
-                          cluster_id: c_id,
-                          ip_address: ip_address,
-                          active: active,
-                        },
-                      })
+                      axios
+                        .post(
+                          "http://95.179.226.113:5000/add-node",
+                          {},
+                          {
+                            params: {
+                              node_id: node_id,
+                              cluster_id: c_id,
+                              ip_address: ip_address,
+                              active: active,
+                            },
+                          }
+                        )
+                        .then(function (response) {
+                          console.log(response);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
+                      close();
+                      refreshPage();
+                    }
+                  }}
+                >
+                  Confirm
+                </button>
+                <button
+                  className="button"
+                  onClick={() => {
+                    console.log("modal closed ");
+                    close();
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </Popup>
+          <Popup trigger={<button> Edit Server </button>} modal>
+            {(close) => (
+              <div>
+                <form className={classes.root} noValidate autoComplete="off">
+                  <select
+                    required
+                    id="old_node_id"
+                    value={old_node_id}
+                    label="node to edit"
+                    onChange={(e) => setOldNode_id(e.target.value)}
+                  >
+                    {serversTable.map((servers) => (
+                      <option value={servers.node_id}>{servers.node_id}</option>
+                    ))}
+                  </select>{" "}
+                  <TextField
+                    required
+                    id="new_cluster_id"
+                    value={new_cluster_id}
+                    label="new cluster id"
+                    onChange={(e) => setClusterId(e.target.value)}
+                  />{" "}
+                  <TextField
+                    required
+                    id="new_ip_address"
+                    value={ip_address}
+                    label="new ip address"
+                    onChange={(e) => setIp_Address(e.target.value)}
+                  />{" "}
+                  <TextField
+                    required
+                    id="new_active"
+                    value={active}
+                    label="new active value"
+                    onChange={(e) => setActive(e.target.value)}
+                  />{" "}
+                </form>
+                <button
+                  className="button"
+                  onClick={() => {
+                    if ((node_id, ip_address, active != "")) {
+                      axios
+                        .post(
+                          "http://95.179.226.113:5000/modify-node",
+                          {},
+                          {
+                            params: {
+                              node_id: old_node_id,
+                              cluster_id: new_cluster_id,
+                              ip_address: ip_address,
+                              active: active,
+                            },
+                          }
+                        )
+                        .then(function (response) {
+                          console.log(response);
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        });
+                      close();
+                      refreshPage();
+                    }
+                  }}
+                >
+                  Confirm
+                </button>
+                <button
+                  className="button"
+                  onClick={() => {
+                    console.log("modal closed ");
+                    close();
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </Popup>
+          <Popup trigger={<button> delete Server </button>} modal>
+            {(close) => (
+              <div>
+                <form className={classes.root} noValidate autoComplete="off">
+                  <select
+                    required
+                    id="delete_node_id"
+                    value={node_id}
+                    label="node to edit"
+                    onChange={(e) => setNode_id(e.target.value)}
+                  >
+                    {serversTable.map((servers) => (
+                      <option value={servers.node_id}>{servers.node_id}</option>
+                    ))}
+                  </select>
+                </form>
+                <button
+                  className="button"
+                  onClick={() => {
+                    if ((node_id, ip_address, active != "")) {
+                      axios
+                        .post(
+                          "http://95.179.226.113:5000/delete-node",
+                          {},
+                          {
+                            params: {
+                              node_id: node_id,
+                            },
+                          }
+                        )
                         .then(function (response) {
                           console.log(response);
                         })
