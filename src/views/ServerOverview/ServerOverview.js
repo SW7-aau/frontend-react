@@ -235,7 +235,7 @@ export default function ServerOverview() {
                 <button
                   className="button"
                   onClick={() => {
-                    if ((node_id, ip_address, active != "")) {
+                    if ((new_cluster_id, ip_address, active != "")) {
                       axios
                         .post(
                           "http://95.179.226.113:5000/modify-node",
@@ -293,7 +293,6 @@ export default function ServerOverview() {
                 <button
                   className="button"
                   onClick={() => {
-                    if ((node_id, ip_address, active != "")) {
                       axios
                         .post(
                           "http://95.179.226.113:5000/delete-node",
@@ -312,7 +311,7 @@ export default function ServerOverview() {
                         });
                       close();
                       refreshPage();
-                    }
+                    
                   }}
                 >
                   Confirm

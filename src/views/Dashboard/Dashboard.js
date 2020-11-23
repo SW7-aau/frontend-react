@@ -169,7 +169,6 @@ export default function Dashboard() {
                 <button
                   className="button"
                   onClick={() => {
-                    if (cluster_id != "") {
                       axios
                         .post(
                           "http://95.179.226.113:5000/edit-cluster",
@@ -189,7 +188,7 @@ export default function Dashboard() {
                         });
                       close();
                       refreshPage();
-                    }
+                    
                   }}
                 >
                   Confirm
