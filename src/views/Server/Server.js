@@ -3,10 +3,10 @@ import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import { Multiselect } from "multiselect-react-dropdown";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import paginationFactory from "react-bootstrap-table2-paginator";
 import { useLocation } from "react-router-dom";
 // react plugin for creating charts
-import CanvasJSReact from 'assets/canvasjs.react';
-
+import CanvasJSReact from "assets/canvasjs.react";
 
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -21,11 +21,7 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 
-
-import {
-  dailySalesChart,
-  completedTasksChart,
-} from "variables/charts.js";
+import { dailySalesChart, completedTasksChart } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -36,6 +32,11 @@ const useStyles = makeStyles(styles);
 const id = 0;
 
 const columns = [
+  {
+    dataField: "Index",
+    text: "Index",
+    sort: true,
+  },
   {
     dataField: "Timestamp",
     text: "Timestamp",
@@ -75,21 +76,24 @@ const columns = [
     dataField: "Layer",
     text: "Layer",
     sort: true,
-  }
+  },
 ];
 
-function changeAxisMinimum(chart) {	 
-	var minY = Infinity;
-	var minimum = chart.axisX[0].get("minimum");
-	var maximum = chart.axisX[0].get("maximum");
-	for(var i = 0; i < chart.data[0].dataPoints.length; i++){
-		if(chart.data[0].dataPoints[i].x >= minimum && chart.data[0].dataPoints[i].x <= maximum && chart.data[0].dataPoints[i].y < minY){
-			minY = chart.data[0].dataPoints[i].y;
-		}
-	}
-	chart.axisY[0].set("minimum", minY)
+function changeAxisMinimum(chart) {
+  var minY = Infinity;
+  var minimum = chart.axisX[0].get("minimum");
+  var maximum = chart.axisX[0].get("maximum");
+  for (var i = 0; i < chart.data[0].dataPoints.length; i++) {
+    if (
+      chart.data[0].dataPoints[i].x >= minimum &&
+      chart.data[0].dataPoints[i].x <= maximum &&
+      chart.data[0].dataPoints[i].y < minY
+    ) {
+      minY = chart.data[0].dataPoints[i].y;
+    }
+  }
+  chart.axisY[0].set("minimum", minY);
 }
-
 
 export default function ServerDetails() {
   let location = useLocation();
@@ -105,8 +109,8 @@ export default function ServerDetails() {
         params: {
           node_id: node_id,
           from: "2020-09-04 11:50:23",
-          to: "2020-12-04 11:50:23"
-        }
+          to: "2020-12-04 11:50:23",
+        },
       });
       setServerStats(result.data);
     };
@@ -117,16 +121,15 @@ export default function ServerDetails() {
   for (var i = 0; i < serverStats.length; i++) {
     chartCPU.push({
       x: new Date(serverStats[i].time_stamp),
-      y: serverStats[i].cpu
+      y: serverStats[i].cpu,
     });
   }
-  console.log(chartCPU)
 
   const chartRAM = [];
   for (var i = 0; i < serverStats.length; i++) {
     chartRAM.push({
       x: new Date(serverStats[i].time_stamp),
-      y: parseFloat(serverStats[i].ram)
+      y: parseFloat(serverStats[i].ram),
     });
   }
 
@@ -134,39 +137,41 @@ export default function ServerDetails() {
   for (var i = 0; i < serverStats.length; i++) {
     chartBandwidth.push({
       x: new Date(serverStats[i].time_stamp),
-      y: parseFloat(serverStats[i].bandwidth)
+      y: parseFloat(serverStats[i].bandwidth),
     });
   }
-
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios("http://95.179.226.113:5000/network-package", {
         params: {
           node_id: node_id,
-          from: "2020-10-04 11:50:23",
-          to: "2020-12-04 11:50:23"
-        }
+          from: "2020-09-04 11:50:23",
+          to: "2020-12-04 11:50:23",
+        },
       });
       setData(result.data);
     };
     fetchData();
   }, []);
 
+  console.log(data);
   const serverTable = [];
-    for (var i = 0; i < data.length; i++) {
-      serverTable.push({
-        Timestamp: new Date(data[i].time_stamp),
-        Protocol: data[i].cpu,
-        Size: data[i].cpu,
-        Destination: data[i].cpu,
-        DestinationPort: data[i].cpu,
-        Source: data[i].cpu,
-        SourcePort: data[i].cpu,
-        Layer: data[i].cpu,
-      });
-    }
+  for (var i = 0; i < data.length; i++) {
+    serverTable.push({
+      Index: i,
+      Timestamp: data[i].timestamp,
+      Protocol: data[i].protocol,
+      Size: data[i].size,
+      Destination: data[i].dst,
+      DestinationPort: data[i].dst_port,
+      Source: data[i].src,
+      SourcePort: data[i].src_port,
+      Layer: data[i].layer,
+    });
+  }
 
+  console.log(serverTable);
 
   const [openNotification, setOpenNotification] = React.useState(null);
   const handleClickNotification = (event) => {
@@ -185,82 +190,85 @@ export default function ServerDetails() {
     animationEnabled: true,
     zoomEnabled: true,
     title: {
-      text: "CPU"
+      text: "CPU",
     },
     axisY: {
       maximum: 100,
     },
-    data: [{
-      type: "line",
-      yValueFormatString:"## '%'",
-      xValueFormatString:"YYYY-MM-DD hh:mm:ss",
-      dataPoints: chartCPU
-    }]
-  }
+    data: [
+      {
+        type: "line",
+        yValueFormatString: "## '%'",
+        xValueFormatString: "YYYY-MM-DD hh:mm:ss",
+        dataPoints: chartCPU,
+      },
+    ],
+  };
 
   const RAMoptions = {
     theme: "light2", // "light1", "dark1", "dark2"
     animationEnabled: true,
     zoomEnabled: true,
     title: {
-      text: "RAM"
+      text: "RAM",
     },
-    data: [{
-      type: "line",
-      yValueFormatString:"##.# '%'",
-      xValueFormatString:"YYYY-MM-DD hh:mm:ss",
-      dataPoints: chartRAM
-    }]
-  }
+    data: [
+      {
+        type: "line",
+        yValueFormatString: "##.# '%'",
+        xValueFormatString: "YYYY-MM-DD hh:mm:ss",
+        dataPoints: chartRAM,
+      },
+    ],
+  };
 
   const Bandwidthoptions = {
     theme: "light2", // "light1", "dark1", "dark2"
     animationEnabled: true,
     zoomEnabled: true,
     title: {
-      text: "Bandwidth"
+      text: "Bandwidth",
     },
-    data: [{
-      type: "line",
-      yValueFormatString:"##.# '%'",
-      xValueFormatString:"YYYY-MM-DD hh:mm:ss",
-      dataPoints: chartBandwidth
-    }]
-  }
-
+    data: [
+      {
+        type: "line",
+        yValueFormatString: "##.# '%'",
+        xValueFormatString: "YYYY-MM-DD hh:mm:ss",
+        dataPoints: chartBandwidth,
+      },
+    ],
+  };
 
   return (
     <div>
-      
-      <CanvasJSChart options = {CPUoptions}  />
-      <CanvasJSChart options = {RAMoptions} />
-      <CanvasJSChart options = {Bandwidthoptions} />
-      
+      <CanvasJSChart options={CPUoptions} />
+      <CanvasJSChart options={RAMoptions} />
+      <CanvasJSChart options={Bandwidthoptions} />
+
       <Card style={{ zIndex: 1 }}>
         <CardHeader color="warning">
           <h4 className={classes.cardTitleWhite}> Network Packages </h4>{" "}
         </CardHeader>{" "}
         <CardBody>
           <ToolkitProvider
-            keyField="Protocol"
+            keyField="Index"
             data={serverTable}
             columns={columns}
             search
           >
-            {
-              props => (
-                <div>
-                  <SearchBar {...props.searchProps} />
-                  <BootstrapTable {...props.baseProps}
-                    keyField="Protocol"
-                    data={serverTable}
-                    columns={columns}
-                    striped
-                  />
-
-                </div>
-              )
-            }
+            {(props) => (
+              <div>
+                <SearchBar {...props.searchProps} />
+                <BootstrapTable
+                  {...props.baseProps}
+                  keyField="Index"
+                  data={serverTable}
+                  columns={columns}
+                  pagination={paginationFactory()}
+                  striped
+                />
+              </div>
+            )}
           </ToolkitProvider>
         </CardBody>{" "}
       </Card>

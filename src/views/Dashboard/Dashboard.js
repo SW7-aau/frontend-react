@@ -122,12 +122,12 @@ export default function Dashboard() {
                         )
                         .then(function (response) {
                           console.log(response);
+                          refreshPage();
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
                       close();
-                      refreshPage();
                     }
                   }}
                 >
@@ -170,7 +170,7 @@ export default function Dashboard() {
                   className="button"
                   onClick={() => {
                       axios
-                        .post(
+                        .put(
                           "http://95.179.226.113:5000/edit-cluster",
                           {},
                           {
@@ -182,13 +182,12 @@ export default function Dashboard() {
                         )
                         .then(function (response) {
                           console.log(response);
+                          refreshPage();
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
                       close();
-                      refreshPage();
-                    
                   }}
                 >
                   Confirm
@@ -224,10 +223,10 @@ export default function Dashboard() {
                   onClick={() => {
                     if (cluster_id != "") {
                       axios
-                        .post(
+                        .delete(
                           "http://95.179.226.113:5000/delete-cluster",
-                          {},
                           {
+                            headers: {'Content-Type' : 'application/x-www-form-urlencoded'},
                             params: {
                               cluster_id: cluster_id,
                             },
@@ -235,12 +234,13 @@ export default function Dashboard() {
                         )
                         .then(function (response) {
                           console.log(response);
+                          refreshPage();
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
                       close();
-                      refreshPage();
+                      
                     }
                   }}
                 >
@@ -259,7 +259,7 @@ export default function Dashboard() {
             )}
           </Popup>
           <ToolkitProvider
-            keyField="node"
+            keyField="cluster"
             data={clusterTable}
             columns={columns}
             search
@@ -269,7 +269,7 @@ export default function Dashboard() {
                 <SearchBar {...props.searchProps} />
                 <BootstrapTable
                   {...props.baseProps}
-                  keyField="node"
+                  keyField="cluster"
                   data={clusterTable}
                   columns={columns}
                   striped

@@ -25,6 +25,7 @@ import Admin from "layouts/Admin.js";
 import "assets/css/material-dashboard-react.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'reactjs-popup/dist/index.css';
 
 const hist = createBrowserHistory();

@@ -172,12 +172,12 @@ export default function ServerOverview() {
                         )
                         .then(function (response) {
                           console.log(response);
+                          refreshPage();
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
                       close();
-                      refreshPage();
                     }
                   }}
                 >
@@ -237,7 +237,7 @@ export default function ServerOverview() {
                   onClick={() => {
                     if ((new_cluster_id, ip_address, active != "")) {
                       axios
-                        .post(
+                        .put(
                           "http://95.179.226.113:5000/modify-node",
                           {},
                           {
@@ -251,12 +251,12 @@ export default function ServerOverview() {
                         )
                         .then(function (response) {
                           console.log(response);
+                          refreshPage();
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
                       close();
-                      refreshPage();
                     }
                   }}
                 >
@@ -294,9 +294,8 @@ export default function ServerOverview() {
                   className="button"
                   onClick={() => {
                       axios
-                        .post(
+                        .delete(
                           "http://95.179.226.113:5000/delete-node",
-                          {},
                           {
                             params: {
                               node_id: node_id,
@@ -305,12 +304,12 @@ export default function ServerOverview() {
                         )
                         .then(function (response) {
                           console.log(response);
+                          refreshPage();
                         })
                         .catch(function (error) {
                           console.log(error);
                         });
                       close();
-                      refreshPage();
                     
                   }}
                 >
