@@ -155,7 +155,6 @@ export default function ServerDetails() {
     fetchData();
   }, []);
 
-  console.log(data);
   const serverTable = [];
   for (var i = 0; i < data.length; i++) {
     serverTable.push({
@@ -171,7 +170,6 @@ export default function ServerDetails() {
     });
   }
 
-  console.log(serverTable);
 
   const [openNotification, setOpenNotification] = React.useState(null);
   const handleClickNotification = (event) => {
