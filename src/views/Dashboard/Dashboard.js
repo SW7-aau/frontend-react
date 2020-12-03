@@ -4,23 +4,13 @@ import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import { Link } from "react-router-dom";
 import Popup from "reactjs-popup";
-import useForceUpdate from "use-force-update";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-// @material-ui/icons
-import AccessTime from "@material-ui/icons/AccessTime";
 // core components
 import TextField from "@material-ui/core/TextField";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-
-import { dailySalesChart, completedTasksChart } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -109,7 +99,7 @@ export default function Dashboard() {
                 <button
                   className="button"
                   onClick={() => {
-                    if (cluster_id != "") {
+                    if (cluster_id !== "") {
                       axios
                         .post(
                           "http://95.179.226.113:5000/add-cluster",
@@ -155,8 +145,8 @@ export default function Dashboard() {
                     value={old_cluster_id}
                     label="old_cluster_id"
                     onChange={(e) => setOldCluster_id(e.target.value)}
-                  > 
-                  {clusterTable.map((table) => <option value={table.cluster}>{table.cluster}</option>)}
+                  >
+                    {clusterTable.map((table) => <option value={table.cluster}>{table.cluster}</option>)}
                   </select>
                   <TextField
                     required
@@ -169,25 +159,25 @@ export default function Dashboard() {
                 <button
                   className="button"
                   onClick={() => {
-                      axios
-                        .put(
-                          "http://95.179.226.113:5000/edit-cluster",
-                          {},
-                          {
-                            params: {
-                              old_cluster_id: old_cluster_id,
-                              new_cluster_id: new_cluster_id,
-                            },
-                          }
-                        )
-                        .then(function (response) {
-                          console.log(response);
-                          refreshPage();
-                        })
-                        .catch(function (error) {
-                          console.log(error);
-                        });
-                      close();
+                    axios
+                      .put(
+                        "http://95.179.226.113:5000/edit-cluster",
+                        {},
+                        {
+                          params: {
+                            old_cluster_id: old_cluster_id,
+                            new_cluster_id: new_cluster_id,
+                          },
+                        }
+                      )
+                      .then(function (response) {
+                        console.log(response);
+                        refreshPage();
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+                    close();
                   }}
                 >
                   Confirm
@@ -214,19 +204,19 @@ export default function Dashboard() {
                     value={cluster_id}
                     label="cluster_id"
                     onChange={(e) => setCluster_id(e.target.value)}
-                  > 
-                  {clusterTable.map((table) => <option value={table.cluster}>{table.cluster}</option>)}
+                  >
+                    {clusterTable.map((table) => <option value={table.cluster}>{table.cluster}</option>)}
                   </select>
                 </form>
                 <button
                   className="button"
                   onClick={() => {
-                    if (cluster_id != "") {
+                    if (cluster_id !== "") {
                       axios
                         .delete(
                           "http://95.179.226.113:5000/delete-cluster",
                           {
-                            headers: {'Content-Type' : 'application/x-www-form-urlencoded'},
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                             params: {
                               cluster_id: cluster_id,
                             },
@@ -240,7 +230,7 @@ export default function Dashboard() {
                           console.log(error);
                         });
                       close();
-                      
+
                     }
                   }}
                 >

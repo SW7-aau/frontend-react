@@ -1,35 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
-import { Multiselect } from "multiselect-react-dropdown";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import { useLocation } from "react-router-dom";
 // react plugin for creating charts
 import CanvasJSReact from "assets/canvasjs.react";
-
-import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-
-// @material-ui/icons
-
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 
-import { dailySalesChart, completedTasksChart } from "variables/charts.js";
-
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-var CanvasJS = CanvasJSReact.CanvasJS;
+// var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const useStyles = makeStyles(styles);
-const id = 0;
 
 const columns = [
   {
@@ -79,21 +68,6 @@ const columns = [
   },
 ];
 
-function changeAxisMinimum(chart) {
-  var minY = Infinity;
-  var minimum = chart.axisX[0].get("minimum");
-  var maximum = chart.axisX[0].get("maximum");
-  for (var i = 0; i < chart.data[0].dataPoints.length; i++) {
-    if (
-      chart.data[0].dataPoints[i].x >= minimum &&
-      chart.data[0].dataPoints[i].x <= maximum &&
-      chart.data[0].dataPoints[i].y < minY
-    ) {
-      minY = chart.data[0].dataPoints[i].y;
-    }
-  }
-  chart.axisY[0].set("minimum", minY);
-}
 
 export default function ServerDetails() {
   let location = useLocation();
@@ -115,7 +89,7 @@ export default function ServerDetails() {
       setServerStats(result.data);
     };
     fetchData();
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const chartCPU = [];
   for (var i = 0; i < serverStats.length; i++) {
@@ -126,18 +100,18 @@ export default function ServerDetails() {
   }
 
   const chartRAM = [];
-  for (var i = 0; i < serverStats.length; i++) {
+  for (var j = 0; j < serverStats.length; j++) {
     chartRAM.push({
-      x: new Date(serverStats[i].time_stamp),
-      y: parseFloat(serverStats[i].ram),
+      x: new Date(serverStats[j].time_stamp),
+      y: parseFloat(serverStats[j].ram),
     });
   }
 
   const chartBandwidth = [];
-  for (var i = 0; i < serverStats.length; i++) {
+  for (var k = 0; k < serverStats.length; k++) {
     chartBandwidth.push({
-      x: new Date(serverStats[i].time_stamp),
-      y: parseFloat(serverStats[i].bandwidth),
+      x: new Date(serverStats[k].time_stamp),
+      y: parseFloat(serverStats[k].bandwidth),
     });
   }
 
@@ -153,35 +127,25 @@ export default function ServerDetails() {
       setData(result.data);
     };
     fetchData();
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const serverTable = [];
-  for (var i = 0; i < data.length; i++) {
+  for (var l = 0; l < data.length; l++) {
     serverTable.push({
-      Index: i,
-      Timestamp: data[i].timestamp,
-      Protocol: data[i].protocol,
-      Size: data[i].size,
-      Destination: data[i].dst,
-      DestinationPort: data[i].dst_port,
-      Source: data[i].src,
-      SourcePort: data[i].src_port,
-      Layer: data[i].layer,
+      Index: l,
+      Timestamp: data[l].timestamp,
+      Protocol: data[l].protocol,
+      Size: data[l].size,
+      Destination: data[l].dst,
+      DestinationPort: data[l].dst_port,
+      Source: data[l].src,
+      SourcePort: data[l].src_port,
+      Layer: data[l].layer,
     });
   }
 
 
-  const [openNotification, setOpenNotification] = React.useState(null);
-  const handleClickNotification = (event) => {
-    if (openNotification && openNotification.contains(event.target)) {
-      setOpenNotification(null);
-    } else {
-      setOpenNotification(event.currentTarget);
-    }
-  };
-  const handleCloseNotification = () => {
-    setOpenNotification(null);
-  };
+
 
   const CPUoptions = {
     theme: "light2", // "light1", "dark1", "dark2"

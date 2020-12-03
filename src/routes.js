@@ -17,13 +17,11 @@
 */
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
-import Person from "@material-ui/icons/Person";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import ServerOverview from "views/ServerOverview/ServerOverview.js"
 import ServerDetails from "views/Server/Server.js";
-import API from "views/API/API";
 // core components/views for RTL layout
 
 const dashboardRoutes = [

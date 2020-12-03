@@ -4,23 +4,14 @@ import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import { Link, useLocation } from "react-router-dom";
 import Popup from "reactjs-popup";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-// @material-ui/icons
-import AccessTime from "@material-ui/icons/AccessTime";
 // core components
 import TextField from "@material-ui/core/TextField";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 
-import { dailySalesChart, completedTasksChart } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -68,7 +59,6 @@ const columns = [
 
 export default function ServerOverview() {
   let location = useLocation();
-  const [data, setData] = useState([]);
   const [ServerOverview, setServer] = useState([]);
   const classes = useStyles();
 
@@ -90,7 +80,7 @@ export default function ServerOverview() {
       setServer(result.data);
     };
     fetchData();
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const serversTable = [];
   for (var i = 0; i < ServerOverview.length; i++) {
@@ -102,18 +92,7 @@ export default function ServerOverview() {
     });
   }
 
-  const [openNotification, setOpenNotification] = React.useState(null);
-  const handleClickNotification = (event) => {
-    if (openNotification && openNotification.contains(event.target)) {
-      setOpenNotification(null);
-    } else {
-      setOpenNotification(event.currentTarget);
-    }
-  };
 
-  const handleCloseNotification = () => {
-    setOpenNotification(null);
-  };
 
   function refreshPage() {
     window.location.reload(false);
@@ -156,7 +135,7 @@ export default function ServerOverview() {
                 <button
                   className="button"
                   onClick={() => {
-                    if ((node_id, ip_address, active != "")) {
+                    if ((node_id, ip_address, active !== "")) {
                       axios
                         .post(
                           "http://95.179.226.113:5000/add-node",
@@ -235,7 +214,7 @@ export default function ServerOverview() {
                 <button
                   className="button"
                   onClick={() => {
-                    if ((new_cluster_id, ip_address, active != "")) {
+                    if ((new_cluster_id, ip_address, active !== "")) {
                       axios
                         .put(
                           "http://95.179.226.113:5000/modify-node",
@@ -293,24 +272,24 @@ export default function ServerOverview() {
                 <button
                   className="button"
                   onClick={() => {
-                      axios
-                        .delete(
-                          "http://95.179.226.113:5000/delete-node",
-                          {
-                            params: {
-                              node_id: node_id,
-                            },
-                          }
-                        )
-                        .then(function (response) {
-                          console.log(response);
-                          refreshPage();
-                        })
-                        .catch(function (error) {
-                          console.log(error);
-                        });
-                      close();
-                    
+                    axios
+                      .delete(
+                        "http://95.179.226.113:5000/delete-node",
+                        {
+                          params: {
+                            node_id: node_id,
+                          },
+                        }
+                      )
+                      .then(function (response) {
+                        console.log(response);
+                        refreshPage();
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+                    close();
+
                   }}
                 >
                   Confirm
